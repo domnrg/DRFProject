@@ -85,3 +85,7 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Оплата {self.user} на сумму {self.amount}"
+
+    class Meta:
+        verbose_name = "Платеж"
+        verbose_name_plural = "Платежи"
