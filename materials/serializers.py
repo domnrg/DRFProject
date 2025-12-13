@@ -7,7 +7,7 @@ from materials.models import Course, Lesson
 class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
-        fields = ("id", "name")
+        fields = ("id", "name", "course")
 
 
 class CourseSerializer(ModelSerializer):
