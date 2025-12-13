@@ -21,6 +21,9 @@ class Course(models.Model):
         help_text="Загрузите картинку",
     )
 
+    def __str__(self):
+        return f'{self.name}'
+
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
@@ -53,6 +56,10 @@ class Lesson(models.Model):
     )
     video_url = models.URLField(blank=True, null=True, help_text="Ссылка на видео")
 
+    def __str__(self):
+        return f'{self.name}'
+
     class Meta:
         verbose_name = "Урок"
         verbose_name_plural = "Уроки"
+
