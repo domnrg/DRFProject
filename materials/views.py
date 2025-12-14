@@ -7,7 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from materials.models import Course, Lesson
 from materials.serializers import (CourseSerializer, LessonDetailSerializer,
                                    LessonSerializer)
-from users.permissions import IsModerator, IsNotModerator, IsOwner
+from users.permissions import IsModerator, IsOwner
 
 
 class CourseViewSet(ModelViewSet):
@@ -23,7 +23,7 @@ class CourseViewSet(ModelViewSet):
 
         if self.action == "create":
             # создавать могут только НЕ модераторы
-            self.permission_classes = [IsAuthenticated, IsNotModerator]
+            self.permission_classes = [IsAuthenticated, ~IsModerator]
 
         elif self.action in ["update", "partial_update"]:
             # модератор ИЛИ владелец
@@ -43,7 +43,7 @@ class CourseViewSet(ModelViewSet):
 
 class LessonCreateAPIView(CreateAPIView):
     serializer_class = LessonSerializer
-    permission_classes = [IsAuthenticated, IsNotModerator]
+    permission_classes = [IsAuthenticated, ~IsModerator]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -57,7 +57,7 @@ class LessonListAPIView(ListAPIView):
 class LessonRetrieveAPIView(RetrieveAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonDetailSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated | IsOwner]
 
 
 class LessonUpdateAPIView(UpdateAPIView):
