@@ -7,7 +7,8 @@ from materials.models import Course, Lesson
 class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
-        fields = ("id", "name")
+        fields = ("id", "name", "course")
+
 
 class CourseSerializer(ModelSerializer):
     lessons = LessonSerializer(many=True, read_only=True, source="lesson_set")
@@ -29,4 +30,4 @@ class LessonDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ("id", "name","course", "description", "lessons_count")
+        fields = ("id", "name", "course", "description", "lessons_count")

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -20,9 +21,17 @@ class Course(models.Model):
         verbose_name="Превью",
         help_text="Загрузите картинку",
     )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца",
+    )
 
     def __str__(self):
-        return f'{self.name}'
+        return f"{self.name}"
 
     class Meta:
         verbose_name = "Пользователь"
@@ -55,11 +64,18 @@ class Lesson(models.Model):
         help_text="Загрузите картинку",
     )
     video_url = models.URLField(blank=True, null=True, help_text="Ссылка на видео")
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Владелец",
+        help_text="Укажите владельца",
+    )
 
     def __str__(self):
-        return f'{self.name}'
+        return f"{self.name}"
 
     class Meta:
         verbose_name = "Урок"
         verbose_name_plural = "Уроки"
-
