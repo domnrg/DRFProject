@@ -66,6 +66,14 @@ class Payment(models.Model):
     PAYMENT_METHODS = [
         ("cash", "Наличные"),
         ("transfer", "Перевод на счёт"),
+        ("stripe", "Stripe"),
+    ]
+
+    PAYMENT_STATUS = [
+        ("created", "Создан"),
+        ("pending", "Ожидает оплаты"),
+        ("paid", "Оплачен"),
+        ("failed", "Ошибка"),
     ]
 
     user = models.ForeignKey(
@@ -77,19 +85,9 @@ class Payment(models.Model):
 
     paid_course = models.ForeignKey(
         Course,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
+        related_name="payments",
         verbose_name="Оплаченный курс",
-        related_name="payments",
-    )
-    paid_lesson = models.ForeignKey(
-        Lesson,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name="Оплаченный урок",
-        related_name="payments",
     )
 
     amount = models.DecimalField(
@@ -104,8 +102,16 @@ class Payment(models.Model):
         verbose_name="Способ оплаты",
     )
 
+    status = models.CharField(max_length=20, choices=PAYMENT_STATUS, default="created")
+
+    stripe_session_id = models.CharField(max_length=255, blank=True, null=True)
+
+    payment_link = models.TextField(blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
-        return f"Оплата {self.user} на сумму {self.amount}"
+        return f"Оплата {self.user} на сумму {self.amount} — {self.status}"
 
     class Meta:
         verbose_name = "Платеж"

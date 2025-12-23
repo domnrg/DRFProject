@@ -1,6 +1,10 @@
-from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     ListAPIView, RetrieveAPIView,
-                                     UpdateAPIView)
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
@@ -8,8 +12,11 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from materials.models import Course, Lesson, Subscription
 from materials.paginations import CustomPagination
-from materials.serializers import (CourseSerializer, LessonDetailSerializer,
-                                   LessonSerializer)
+from materials.serializers import (
+    CourseSerializer,
+    LessonDetailSerializer,
+    LessonSerializer,
+)
 from users.permissions import IsModerator, IsOwner
 
 
@@ -42,7 +49,6 @@ class CourseViewSet(ModelViewSet):
             self.permission_classes = [IsAuthenticated, IsOwner]
 
         return [permission() for permission in self.permission_classes]
-
 
 
 class LessonCreateAPIView(CreateAPIView):
@@ -95,4 +101,3 @@ class SubscriptionAPIView(APIView):
             message = "Подписка добавлена"
 
         return Response({"message": message})
-

@@ -5,21 +5,24 @@ from .models import Payment, User
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-    course = serializers.SerializerMethodField()
-    lesson = serializers.SerializerMethodField()
-
     class Meta:
         model = Payment
         fields = (
             "id",
-            "user",
             "paid_course",
-            "paid_lesson",
             "amount",
+            "status",
             "method",
-            "date",
-            "course",
-            "lesson",
+            "stripe_session_id",
+            "payment_link",
+            "created_at",
+        )
+        read_only_fields = (
+            "status",
+            "method",
+            "stripe_session_id",
+            "link",
+            "created_at",
         )
 
     def get_course(self, object):
