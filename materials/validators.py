@@ -10,6 +10,4 @@ class YoutubeLinkValidator:
         parsed_url = urlparse(value)
 
         if "youtube.com" not in parsed_url.netloc:
-            raise ValidationError(
-                "Можно использовать только ссылки на youtube.com"
-            )
+            raise ValidationError("Можно использовать только ссылки на youtube.com")

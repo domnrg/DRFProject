@@ -21,11 +21,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_filters",
     "rest_framework",
+    "rest_framework_simplejwt",
+    "drf_yasg",
     "users",
     "materials",
-    "django_filters",
-    "rest_framework_simplejwt",
 ]
 
 MIDDLEWARE = [
@@ -113,3 +114,5 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
