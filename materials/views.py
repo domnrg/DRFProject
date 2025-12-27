@@ -1,5 +1,3 @@
-from pygments.lexer import default
-from rest_framework.decorators import action
 from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView,
@@ -52,6 +50,10 @@ class CourseViewSet(ModelViewSet):
 
         return [permission() for permission in self.permission_classes]
 
+    def perform_update(self, serializer, send_course_update_email=None):
+        course = serializer.save()
+        send_course_update_email.delay(course.id)
+
 
 class LessonCreateAPIView(CreateAPIView):
     serializer_class = LessonSerializer
@@ -77,12 +79,6 @@ class LessonUpdateAPIView(UpdateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated, IsModerator | IsOwner]
-
-    @action(detail=True, methods=("post", ))
-    def send_mail(self, request, pk):
-        course=get_object_or_404(Course,pk=pk)
-
-
 
 
 class LessonDestroyAPIView(DestroyAPIView):
