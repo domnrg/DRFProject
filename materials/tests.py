@@ -89,9 +89,7 @@ class CourseTestCase(APITestCase):
     def test_course_update(self):
         self.client.force_authenticate(user=self.user)
         url = reverse("materials:course-detail", args=(self.course.pk,))
-        data = {
-            "name": "Update course",
-        }
+        data = {"name": "Update course",}
         response = self.client.patch(url, data)
         data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
