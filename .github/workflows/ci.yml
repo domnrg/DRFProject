@@ -92,38 +92,23 @@ jobs:
       - name: Run project on server
         run: |
           ssh -T -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          # Создаем директорию, если ее нет, и даем права
-          mkdir -p "${{ secrets.DEPLOY_DIR }}"
-          chmod 755 "${{ secrets.DEPLOY_DIR }}"
+          export SECRET_KEY="${{ secrets.SECRET_KEY }}"
+          export POSTGRES_DB="${{ secrets.POSTGRES_DB }}"
+          export POSTGRES_USER="${{ secrets.POSTGRES_USER }}"
+          export POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}"
+          export POSTGRES_HOST="${{ secrets.POSTGRES_HOST }}"
+          export POSTGRES_PORT="${{ secrets.POSTGRES_PORT }}"
+          export STRIPE_API_KEY="${{ secrets.STRIPE_API_KEY }}"
 
-          cd "${{ secrets.DEPLOY_DIR }}"
+          cd ${{ secrets.DEPLOY_DIR }}
 
-          # Копируем файлы проекта
-          rsync -avz --exclude '__pycache__' --exclude '.git' . ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:"${{ secrets.DEPLOY_DIR }}"
-
-          # Создаем .env файл из секретов
-          cat > .env << ENV
-          SECRET_KEY=${{ secrets.SECRET_KEY }}
-          POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-          POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_HOST=db
-          POSTGRES_PORT=5432
-          STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}
-          ENV
-      
-      # Поднимаем контейнеры в фоне
           docker-compose down
           docker-compose up -d
-      
-      # Ждем, пока база стартует (можно через sleep или dockerize)
-          echo "Waiting for database to be ready..."
-          sleep 10
-      
-      # Выполняем миграции и сборку статики
-          docker-compose exec -T web python manage.py migrate --noinput
+
+          docker-compose exec -T web python manage.py migrate
           docker-compose exec -T web python manage.py collectstatic --noinput
           EOF
+      
 
       
 
