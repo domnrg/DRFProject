@@ -67,6 +67,16 @@ services:
       - redis
       - db
 
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/app/staticfiles
+    depends_on:
+      - web
+
 volumes:
   postgres_data:
 
