@@ -20,6 +20,7 @@ from materials.serializers import (
 from users.permissions import IsModerator, IsOwner
 from .tasks import send_course_update_email
 
+
 class CourseViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
