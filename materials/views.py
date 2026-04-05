@@ -18,6 +18,7 @@ from materials.serializers import (
     LessonSerializer,
 )
 from users.permissions import IsModerator, IsOwner
+from .tasks import send_course_update_email
 
 
 class CourseViewSet(ModelViewSet):
@@ -49,6 +50,10 @@ class CourseViewSet(ModelViewSet):
             self.permission_classes = [IsAuthenticated, IsOwner]
 
         return [permission() for permission in self.permission_classes]
+
+    def perform_update(self, serializer):
+        course = serializer.save()
+        send_course_update_email.delay(course.id)
 
 
 class LessonCreateAPIView(CreateAPIView):
